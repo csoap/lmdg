@@ -29,6 +29,28 @@ exports.init = function(config){
 
 function nop(a,b,c,d,e,f,g){}
 
+//获取建筑信息
+exports.getBuildingIF = function(callback){
+    callback = callback == null ? nop : callback;
+    var sql = 'select * from t_builds';
+    console.log("sql: " + sql);
+    query(sql, function(err, rows, fields){
+        if(err){
+            console.log('query sql is error from getBuildingIF');
+            callback(false);
+            return;
+        }else{
+            if(rows == ""){
+                console.log('query sql is null from getBuildingIF');
+                callback(false);
+                return;
+            }else{
+                callback(rows);
+            }
+        }
+    })
+}
+
 //更新昵称和性别
 exports.updateInfo = function(sex, username, account, callback){
     callback = callback == null ? nop : callback;

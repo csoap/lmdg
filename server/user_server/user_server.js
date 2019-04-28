@@ -48,6 +48,17 @@ app.get('/getVersion',function(req, res){
     send(res,{'version': verNumber});
 });
 
+//获取建筑信息
+app.get('/getBuildInfo',function(req, res){
+    db.getBuildingIF(function(rows){
+        if(rows){
+            send(res, {code:0,msg:"ok",rows:rows});
+        }else{
+            send(res, {code:1,msg:"getBuildInfo is err"});
+        }
+    });
+});
+
 //登陆游戏响应
 app.get('/loginGame',function(req,res){
     var account = req.query.account;

@@ -1,8 +1,18 @@
 function initManager(){
     cc.vv = {};
     cc.vv.http = require("../HTTP");
-    var UserMgr= require("../UserManager");
+    cc.vv.url = {};
+    cc.vv.url.cityServer = "http://127.0.0.1:9000";
+    var UserMgr= require("../../obj/UserManager");
     cc.vv.userMgr = new UserMgr();
+
+    //建筑信息初始化
+    cc.vv.buildings = {};
+    //资源信息初始化
+    cc.vv.resources = {};
+    //配置
+    cc.vv.config = {};
+    cc.vv.config.resourceUpdateTime = 5; //资源更新时间 单位秒
 }
 
 cc.Class({
