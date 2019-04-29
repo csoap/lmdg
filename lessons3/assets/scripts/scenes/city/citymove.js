@@ -6,6 +6,10 @@ cc.Class({
         topshow:{
             default: null,
             type:cc.Node
+        },
+        cameNode:{  //摄像机
+            default: null,
+            type:cc.Node
         }
     },
 
@@ -19,13 +23,13 @@ cc.Class({
         this.node.on(cc.Node.EventType.TOUCH_MOVE, function ( event ) {
             var lx = event.getDeltaX();
             var ly = event.getDeltaY();
-            var x = this.node.x;
-            var y = this.node.y;
-            if(x + lx * this.speed < 1400 && x + lx * this.speed > -1400){
-                this.node.x = x + lx * this.speed;
+            var x = this.cameNode.x;
+            var y = this.cameNode.y;
+            if(x - lx * this.speed < 1400 && x - lx * this.speed > -1400){
+                this.cameNode.x = x - lx * this.speed;
             }
-            if(y + ly * this.speed  < 384 && y + ly * this.speed > -384){
-                this.node.y = y + ly * this.speed;
+            if(y - ly * this.speed  < 384 && y - ly * this.speed > -384){
+                this.cameNode.y = y - ly * this.speed;
             }
         },this);
         // this.node.on(cc.Node.EventType.TOUCH_CANCEL, function ( event ) {

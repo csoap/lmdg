@@ -2,7 +2,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        barrackPrefab:{
+        barrackPrefab:{     //募兵
             default: null,
             type:cc.Prefab
         },
@@ -26,7 +26,7 @@ cc.Class({
             default: null,
             type:cc.Prefab
         },
-        topshow:{
+        topshow:{   //显示层
             default: null,
             type:cc.Node
         },
@@ -42,6 +42,7 @@ cc.Class({
         var tgname = tgnode.name;
         var topshow = this.topshow;
         var iconArray = new Array();
+
         switch(tgname){
             case 'barracks_one':
                 iconArray[0] = this.detailPrefab;
@@ -103,6 +104,7 @@ cc.Class({
         var tx = event.getLocationX();
         var ty = event.getLocationY();
         var pnode2 = topshow.convertToNodeSpaceAR(cc.v2(tx, ty));
+        //清除之前的小图标
         if(topshow.childrenCount > 0){
             topshow.destroyAllChildren();
         }
@@ -125,10 +127,10 @@ cc.Class({
             let node2 = cc.instantiate(iconArray[1]);
             topshow.addChild(node1);
             topshow.addChild(node2);
-            node1.x = pnode2.x - 40;
-            node1.y = pnode2.y - 80;
-            node2.x = pnode2.x + 40;
-            node2.y = pnode2.y - 80;
+            node1.x = pnode2.x - 36;
+            node1.y = pnode2.y - 70;
+            node2.x = pnode2.x + 36;
+            node2.y = pnode2.y - 70;
         }
 
     },
