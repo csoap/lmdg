@@ -40,7 +40,7 @@ cc.Class({
     },
 //登录游戏
    loginGame(){
-       var self = this;
+        var self = this;
         var account = this.accountTextInfo_one.string;
         var password = this.passwordTextInfo_one.string;
         var params = {
@@ -52,40 +52,29 @@ cc.Class({
                 cc.log("errmsg:",data.msg);
                 return;
             }
-
-            //设置用户信息
-            cc.vv.userMgr.account = data.account;
+            cc.log(data);
+            //设置我们的用户信息
             cc.vv.userMgr.sign = data.sign;
 
-            if(data.username){
-                cc.vv.userMgr.username = data.username;
+            if(data.userInfo.username){
+                cc.vv.userMgr.username = data.userInfo.username;
             }
-            //进入游戏选服页面
-            self.entryGameNode.active = true;
+            cc.vv.userMgr.account = data.userInfo.account;
+            cc.vv.userMgr.userid = data.userInfo.userid;
+            cc.vv.userMgr.sex = data.userInfo.sex;
+            cc.vv.userMgr.lv = data.userInfo.lv;
+            cc.vv.userMgr.exp = data.userInfo.exp;
+            cc.vv.userMgr.expAll = data.userInfo.expAll;
+            cc.vv.userMgr.coins = data.userInfo.coins;
+            cc.vv.userMgr.gems = data.userInfo.gems;
+            cc.vv.userMgr.vip = data.userInfo.vip;
+            cc.vv.userMgr.power = data.userInfo.power;
+            cc.vv.userMgr.x = data.userInfo.x;  //世界坐标x
+            cc.vv.userMgr.y = data.userInfo.y;  //世界坐标y
+
+            // 设置响应后的页面
             self.infoNode.active = false;
-            
-            //设置我们的用户信息
-            // cc.vv.userMgr.sign = data.sign;
-
-            // if(data.userInfo.username){
-            //     cc.vv.userMgr.username = data.userInfo.username;
-            // }
-            // cc.vv.userMgr.account = data.userInfo.account;
-            // cc.vv.userMgr.userid = data.userInfo.userid;
-            // cc.vv.userMgr.sex = data.userInfo.sex;
-            // cc.vv.userMgr.lv = data.userInfo.lv;
-            // cc.vv.userMgr.exp = data.userInfo.exp;
-            // cc.vv.userMgr.expAll = data.userInfo.expAll;
-            // cc.vv.userMgr.coins = data.userInfo.coins;
-            // cc.vv.userMgr.gems = data.userInfo.gems;
-            // cc.vv.userMgr.vip = data.userInfo.vip;
-            // cc.vv.userMgr.power = data.userInfo.power;
-            // cc.vv.userMgr.x = data.userInfo.x;  //世界坐标x
-            // cc.vv.userMgr.y = data.userInfo.y;  //世界坐标y
-
-            //设置响应后的页面
-            // self.infoNode.active = false;
-            // self.entryGameNode.active = true;
+            self.entryGameNode.active = true;
         });
    },
 

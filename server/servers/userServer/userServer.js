@@ -2,12 +2,13 @@
 express = require('express')
 //创建express对象
 const app = express()
-
-//引入mysql模块
-var db = require('../utils/db');
-
+//引入userLogic
+var userLogic = require('../../logic/userLogic');
 //引入加密模块
-var crypto = require('../utils/crypto');
+var crypto = require('../../utils/crypto');
+
+var userRedis = require('../../redis/userRedis');
+
 //响应json数据
 function send(res, ret){
     var str = JSON.stringify(ret);
@@ -27,21 +28,7 @@ app.all('*', function(req, res, next){
     res.header("Content-Type", "application/json;charset=utf-8");
     next();
 });
-app.get('/aaa',function(req, res){
-    console.log('aaa进入');
-    var getVersionNum = req.query.comversion;
-    console.log('versionNum: ' + getVersionNum);
-    var data = {version:'2222'};
-    send(res, data);
-});
 
-app.get('/bbb',function(req, res){
-    console.log('bbb进入');
-    db.getNameByUserid(391, function(name){
-        console.log('name: ' + name);
-        res.send('你要查询的姓名是： ' + name);
-    });
-});
 //获取版本号响应
 app.get('/getVersion',function(req, res){
     var verNumber = config.VERSION_NUMBER
@@ -50,7 +37,7 @@ app.get('/getVersion',function(req, res){
 
 //获取建筑信息
 app.get('/getBuildInfo',function(req, res){
-    db.getBuildingIF(function(rows){
+    userLogic.getBuildingIF(function(rows){
         if(rows){
             send(res, {code:0,msg:"ok",rows:rows});
         }else{
@@ -68,14 +55,11 @@ app.get('/loginGame',function(req,res){
         send(res,{code : 1 ,msg :"account or password is null"});
     }
     //验证账号密码是否存在
-    db.vercifyPassword(account, password, function(data){
-        var sign = crypto.md5(account + req.ip + config.ACCOUNT_KEY);
+    userLogic.vercifyPassword(account, password, function(data){
         if(data){
-            if(data[1] != null){
-                send(res,{code : 0, msg : "ok",account : account, sign : sign,username:data[1]});
-            }else{
-                send(res,{code : 0, msg : "ok",account : account, sign : sign});
-            }
+            var sign = crypto.md5(data[1].userid + req.ip + config.ACCOUNT_KEY);
+            send(res,{code : 0, msg : "ok", sign : sign,userInfo:data[1]});
+            userRedis.setUser(data[1]);
         }else{
             send(res,{code : 0, msg : "the password or account is wrong"});
         }
@@ -89,12 +73,12 @@ app.get('/register',function(req,res){
     if(account == "" || password == ""){
         send(res,{code : 1 ,msg :"account or password is null"});
     }
-    db.judgeAccount(account,function(has){
+    userLogic.judgeAccount(account,function(has){
         if(has){
             send(res,{code:1,msg : "the account is used"});
         }else{
             //没有的话，就创建一个账号
-            db.createAccount(account,password,function(suc){
+            userLogic.createAccount(account,password,function(suc){
                 if(suc){
                     var sign = crypto.md5(account + req.ip + config.ACCOUNT_KEY);
                     send(res,{code : 0, msg : "ok",account : account, sign : sign});
@@ -123,12 +107,12 @@ app.get('/createRole',function(req,res){
         send(res,{code : 1 ,msg :"sigin is err"});
         return;
     }
-    db.judgeUsername(username,function(has){
+    userLogic.judgeUsername(username,function(has){
         if(has){
             send(res,{code:1,msg : "the username is used"});
         }else{
             //没有的话，就更新用户信息
-            db.updateInfo(sex,username, account,function(suc){
+            userLogic.updateInfo(sex,username, account,function(suc){
                 if(suc){
                     send(res,{code : 0, msg : "ok",username : username, sex : sex});
                 }else{
